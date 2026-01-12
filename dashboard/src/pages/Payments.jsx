@@ -38,7 +38,9 @@ function Payments() {
       fetchPayments();
     } catch (error) {
       console.error("Error capturing payment:", error);
-      alert(error.response?.data?.error?.description || "Failed to capture payment");
+      alert(
+        error.response?.data?.error?.description || "Failed to capture payment"
+      );
     }
   };
 
@@ -69,37 +71,93 @@ function Payments() {
 
       <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
         {payments.length === 0 ? (
-          <div className="text-center py-12 text-gray-500" data-test-id="empty-state">
+          <div
+            className="text-center py-12 text-gray-500"
+            data-test-id="empty-state"
+          >
             No payments found
           </div>
         ) : (
           <table className="w-full" data-test-id="payments-table">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Payment ID</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Order ID</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Amount</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Method</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Status</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Captured</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Created At</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Actions</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">
+                  Payment ID
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">
+                  Order ID
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">
+                  Amount
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">
+                  Method
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">
+                  Status
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">
+                  Captured
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">
+                  Created At
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
               {payments.map((payment) => (
-                <tr key={payment.id} className="hover:bg-gray-50" data-test-id="payment-row" data-payment-id={payment.id}>
-                  <td className="px-6 py-4 text-sm font-mono" data-test-id="payment-id">{payment.id}</td>
-                  <td className="px-6 py-4 text-sm font-mono" data-test-id="payment-order-id">{payment.order_id}</td>
-                  <td className="px-6 py-4 text-sm" data-test-id="payment-amount">₹{(payment.amount / 100).toFixed(2)}</td>
-                  <td className="px-6 py-4 text-sm uppercase" data-test-id="payment-method">{payment.method}</td>
+                <tr
+                  key={payment.id}
+                  className="hover:bg-gray-50"
+                  data-test-id="payment-row"
+                  data-payment-id={payment.id}
+                >
+                  <td
+                    className="px-6 py-4 text-sm font-mono"
+                    data-test-id="payment-id"
+                  >
+                    {payment.id}
+                  </td>
+                  <td
+                    className="px-6 py-4 text-sm font-mono"
+                    data-test-id="payment-order-id"
+                  >
+                    {payment.order_id}
+                  </td>
+                  <td
+                    className="px-6 py-4 text-sm"
+                    data-test-id="payment-amount"
+                  >
+                    ₹{(payment.amount / 100).toFixed(2)}
+                  </td>
+                  <td
+                    className="px-6 py-4 text-sm uppercase"
+                    data-test-id="payment-method"
+                  >
+                    {payment.method}
+                  </td>
                   <td className="px-6 py-4" data-test-id="payment-status">
-                    <span className={`inline-block px-3 py-1 text-xs font-medium rounded-full ${getStatusStyle(payment.status)}`}>
+                    <span
+                      className={`inline-block px-3 py-1 text-xs font-medium rounded-full ${getStatusStyle(
+                        payment.status
+                      )}`}
+                    >
                       {payment.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm" data-test-id="payment-captured">{payment.captured ? "Yes" : "No"}</td>
-                  <td className="px-6 py-4 text-sm text-gray-600" data-test-id="payment-created">
+                  <td
+                    className="px-6 py-4 text-sm"
+                    data-test-id="payment-captured"
+                  >
+                    {payment.captured ? "Yes" : "No"}
+                  </td>
+                  <td
+                    className="px-6 py-4 text-sm text-gray-600"
+                    data-test-id="payment-created"
+                  >
                     {new Date(payment.created_at).toLocaleString()}
                   </td>
                   <td className="px-6 py-4">
@@ -107,7 +165,9 @@ function Payments() {
                       <button
                         className="px-4 py-2 bg-black text-white text-sm rounded hover:bg-gray-800 transition"
                         data-test-id="capture-button"
-                        onClick={() => handleCapture(payment.id, payment.amount)}
+                        onClick={() =>
+                          handleCapture(payment.id, payment.amount)
+                        }
                       >
                         Capture
                       </button>

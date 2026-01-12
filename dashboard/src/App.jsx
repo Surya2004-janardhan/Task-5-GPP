@@ -22,7 +22,10 @@ function Sidebar() {
       : "text-gray-400 hover:bg-gray-800 hover:text-white";
 
   return (
-    <div className="w-64 bg-black text-white min-h-screen" data-test-id="sidebar">
+    <div
+      className="w-64 bg-black text-white min-h-screen"
+      data-test-id="sidebar"
+    >
       <div className="p-6 border-b border-gray-800">
         <h1 className="text-xl font-bold">Payment Gateway</h1>
       </div>
@@ -40,7 +43,9 @@ function Sidebar() {
           <li>
             <Link
               to="/orders"
-              className={`block px-6 py-3 transition-all ${isActive("/orders")}`}
+              className={`block px-6 py-3 transition-all ${isActive(
+                "/orders"
+              )}`}
               data-test-id="nav-orders"
             >
               Orders
@@ -49,7 +54,9 @@ function Sidebar() {
           <li>
             <Link
               to="/payments"
-              className={`block px-6 py-3 transition-all ${isActive("/payments")}`}
+              className={`block px-6 py-3 transition-all ${isActive(
+                "/payments"
+              )}`}
               data-test-id="nav-payments"
             >
               Payments
@@ -58,7 +65,9 @@ function Sidebar() {
           <li>
             <Link
               to="/refunds"
-              className={`block px-6 py-3 transition-all ${isActive("/refunds")}`}
+              className={`block px-6 py-3 transition-all ${isActive(
+                "/refunds"
+              )}`}
               data-test-id="nav-refunds"
             >
               Refunds
@@ -67,7 +76,9 @@ function Sidebar() {
           <li>
             <Link
               to="/dashboard/webhooks"
-              className={`block px-6 py-3 transition-all ${isActive("/dashboard/webhooks")}`}
+              className={`block px-6 py-3 transition-all ${isActive(
+                "/dashboard/webhooks"
+              )}`}
               data-test-id="nav-webhooks"
             >
               Webhooks
@@ -76,7 +87,9 @@ function Sidebar() {
           <li>
             <Link
               to="/dashboard/docs"
-              className={`block px-6 py-3 transition-all ${isActive("/dashboard/docs")}`}
+              className={`block px-6 py-3 transition-all ${isActive(
+                "/dashboard/docs"
+              )}`}
               data-test-id="nav-docs"
             >
               API Docs

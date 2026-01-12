@@ -57,39 +57,93 @@ function Refunds() {
 
       <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
         {refunds.length === 0 ? (
-          <div className="text-center py-12 text-gray-500" data-test-id="empty-state">
+          <div
+            className="text-center py-12 text-gray-500"
+            data-test-id="empty-state"
+          >
             No refunds found
           </div>
         ) : (
           <table className="w-full" data-test-id="refunds-table">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Refund ID</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Payment ID</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Amount</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Reason</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Status</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Created At</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Processed At</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">
+                  Refund ID
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">
+                  Payment ID
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">
+                  Amount
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">
+                  Reason
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">
+                  Status
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">
+                  Created At
+                </th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">
+                  Processed At
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
               {refunds.map((refund) => (
-                <tr key={refund.id} className="hover:bg-gray-50" data-test-id="refund-row" data-refund-id={refund.id}>
-                  <td className="px-6 py-4 text-sm font-mono" data-test-id="refund-id">{refund.id}</td>
-                  <td className="px-6 py-4 text-sm font-mono" data-test-id="refund-payment-id">{refund.payment_id}</td>
-                  <td className="px-6 py-4 text-sm" data-test-id="refund-amount">₹{(refund.amount / 100).toFixed(2)}</td>
-                  <td className="px-6 py-4 text-sm" data-test-id="refund-reason">{refund.reason || "-"}</td>
+                <tr
+                  key={refund.id}
+                  className="hover:bg-gray-50"
+                  data-test-id="refund-row"
+                  data-refund-id={refund.id}
+                >
+                  <td
+                    className="px-6 py-4 text-sm font-mono"
+                    data-test-id="refund-id"
+                  >
+                    {refund.id}
+                  </td>
+                  <td
+                    className="px-6 py-4 text-sm font-mono"
+                    data-test-id="refund-payment-id"
+                  >
+                    {refund.payment_id}
+                  </td>
+                  <td
+                    className="px-6 py-4 text-sm"
+                    data-test-id="refund-amount"
+                  >
+                    ₹{(refund.amount / 100).toFixed(2)}
+                  </td>
+                  <td
+                    className="px-6 py-4 text-sm"
+                    data-test-id="refund-reason"
+                  >
+                    {refund.reason || "-"}
+                  </td>
                   <td className="px-6 py-4" data-test-id="refund-status">
-                    <span className={`inline-block px-3 py-1 text-xs font-medium rounded-full ${getStatusStyle(refund.status)}`}>
+                    <span
+                      className={`inline-block px-3 py-1 text-xs font-medium rounded-full ${getStatusStyle(
+                        refund.status
+                      )}`}
+                    >
                       {refund.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-600" data-test-id="refund-created">
+                  <td
+                    className="px-6 py-4 text-sm text-gray-600"
+                    data-test-id="refund-created"
+                  >
                     {new Date(refund.created_at).toLocaleString()}
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-600" data-test-id="refund-processed">
-                    {refund.processed_at ? new Date(refund.processed_at).toLocaleString() : "-"}
+                  <td
+                    className="px-6 py-4 text-sm text-gray-600"
+                    data-test-id="refund-processed"
+                  >
+                    {refund.processed_at
+                      ? new Date(refund.processed_at).toLocaleString()
+                      : "-"}
                   </td>
                 </tr>
               ))}

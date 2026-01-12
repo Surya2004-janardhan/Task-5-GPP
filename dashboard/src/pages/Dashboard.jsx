@@ -43,7 +43,8 @@ function Dashboard() {
       setStats({
         totalOrders: ordersRes.data.total || 0,
         totalPayments: paymentsRes.data.total || 0,
-        successfulPayments: payments.filter((p) => p.status === "success").length,
+        successfulPayments: payments.filter((p) => p.status === "success")
+          .length,
         pendingPayments: payments.filter((p) => p.status === "pending").length,
         failedPayments: payments.filter((p) => p.status === "failed").length,
         totalRefunds: refundsRes.data.total || 0,
@@ -69,56 +70,105 @@ function Dashboard() {
     <div data-test-id="dashboard-page">
       <h2 className="text-3xl font-bold text-black mb-8">Dashboard</h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8" data-test-id="stats-grid">
-        <div className="bg-white border border-gray-200 rounded-lg p-6" data-test-id="stat-orders">
+      <div
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
+        data-test-id="stats-grid"
+      >
+        <div
+          className="bg-white border border-gray-200 rounded-lg p-6"
+          data-test-id="stat-orders"
+        >
           <div className="text-sm text-gray-500 mb-1">Total Orders</div>
-          <div className="text-3xl font-bold text-black">{stats.totalOrders}</div>
+          <div className="text-3xl font-bold text-black">
+            {stats.totalOrders}
+          </div>
         </div>
-        <div className="bg-white border border-gray-200 rounded-lg p-6" data-test-id="stat-payments">
+        <div
+          className="bg-white border border-gray-200 rounded-lg p-6"
+          data-test-id="stat-payments"
+        >
           <div className="text-sm text-gray-500 mb-1">Total Payments</div>
-          <div className="text-3xl font-bold text-black">{stats.totalPayments}</div>
+          <div className="text-3xl font-bold text-black">
+            {stats.totalPayments}
+          </div>
         </div>
-        <div className="bg-white border border-gray-200 rounded-lg p-6" data-test-id="stat-successful">
+        <div
+          className="bg-white border border-gray-200 rounded-lg p-6"
+          data-test-id="stat-successful"
+        >
           <div className="text-sm text-gray-500 mb-1">Successful</div>
-          <div className="text-3xl font-bold text-black">{stats.successfulPayments}</div>
+          <div className="text-3xl font-bold text-black">
+            {stats.successfulPayments}
+          </div>
         </div>
-        <div className="bg-white border border-gray-200 rounded-lg p-6" data-test-id="stat-pending">
+        <div
+          className="bg-white border border-gray-200 rounded-lg p-6"
+          data-test-id="stat-pending"
+        >
           <div className="text-sm text-gray-500 mb-1">Pending</div>
-          <div className="text-3xl font-bold text-gray-600">{stats.pendingPayments}</div>
+          <div className="text-3xl font-bold text-gray-600">
+            {stats.pendingPayments}
+          </div>
         </div>
-        <div className="bg-white border border-gray-200 rounded-lg p-6" data-test-id="stat-failed">
+        <div
+          className="bg-white border border-gray-200 rounded-lg p-6"
+          data-test-id="stat-failed"
+        >
           <div className="text-sm text-gray-500 mb-1">Failed</div>
-          <div className="text-3xl font-bold text-black">{stats.failedPayments}</div>
+          <div className="text-3xl font-bold text-black">
+            {stats.failedPayments}
+          </div>
         </div>
-        <div className="bg-white border border-gray-200 rounded-lg p-6" data-test-id="stat-refunds">
+        <div
+          className="bg-white border border-gray-200 rounded-lg p-6"
+          data-test-id="stat-refunds"
+        >
           <div className="text-sm text-gray-500 mb-1">Total Refunds</div>
-          <div className="text-3xl font-bold text-black">{stats.totalRefunds}</div>
+          <div className="text-3xl font-bold text-black">
+            {stats.totalRefunds}
+          </div>
         </div>
       </div>
 
       {jobStatus && (
-        <div className="bg-white border border-gray-200 rounded-lg p-6" data-test-id="job-status">
-          <h3 className="text-xl font-bold text-black mb-6">Job Queue Status</h3>
+        <div
+          className="bg-white border border-gray-200 rounded-lg p-6"
+          data-test-id="job-status"
+        >
+          <h3 className="text-xl font-bold text-black mb-6">
+            Job Queue Status
+          </h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
             <div className="text-center">
               <div className="text-sm text-gray-500">Pending</div>
-              <div className="text-2xl font-bold text-gray-600">{jobStatus.pending}</div>
+              <div className="text-2xl font-bold text-gray-600">
+                {jobStatus.pending}
+              </div>
             </div>
             <div className="text-center">
               <div className="text-sm text-gray-500">Processing</div>
-              <div className="text-2xl font-bold text-black">{jobStatus.processing}</div>
+              <div className="text-2xl font-bold text-black">
+                {jobStatus.processing}
+              </div>
             </div>
             <div className="text-center">
               <div className="text-sm text-gray-500">Completed</div>
-              <div className="text-2xl font-bold text-black">{jobStatus.completed}</div>
+              <div className="text-2xl font-bold text-black">
+                {jobStatus.completed}
+              </div>
             </div>
             <div className="text-center">
               <div className="text-sm text-gray-500">Failed</div>
-              <div className="text-2xl font-bold text-black">{jobStatus.failed}</div>
+              <div className="text-2xl font-bold text-black">
+                {jobStatus.failed}
+              </div>
             </div>
           </div>
           <p className="text-gray-600">
-            Worker Status: <span className="font-semibold text-black">{jobStatus.worker_status}</span>
+            Worker Status:{" "}
+            <span className="font-semibold text-black">
+              {jobStatus.worker_status}
+            </span>
           </p>
         </div>
       )}
