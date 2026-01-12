@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - Payment Gateway</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .checkout-container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      width: 100%;
+      max-width: 420px;
+      overflow: hidden;
+    }
+
+    .checkout-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 25px;
+      text-align: center;
+    }
+
+    .checkout-header h1 {
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+
+    .checkout-header .amount {
+      font-size: 36px;
+      font-weight: bold;
+    }
+
+    .checkout-header .order-id {
+      font-size: 12px;
+      opacity: 0.8;
+      margin-top: 10px;
+    }
+
+    .checkout-body {
+      padding: 25px;
+    }
+
+    .method-tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 25px;
+    }
+
+    .method-tab {
+      flex: 1;
+      padding: 15px;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      background: white;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .method-tab:hover {
+      border-color: #667eea;
+    }
+
+    .method-tab.active {
+      border-color: #667eea;
+      background: #f0f4ff;
+    }
+
+    .method-tab .icon {
+      font-size: 24px;
+      margin-bottom: 5px;
+    }
+
+    .method-tab .label {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #374151;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .form-group input::placeholder {
+      color: #9ca3af;
+    }
+
+    .card-row {
+      display: flex;
+      gap: 15px;
+    }
+
+    .card-row .form-group {
+      flex: 1;
+    }
+
+    .pay-button {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .pay-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .pay-button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .status-message {
+      text-align: center;
+      padding: 20px;
+      margin-top: 20px;
+      border-radius: 10px;
+    }
+
+    .status-message.success {
+      background: #dcfce7;
+      color: #16a34a;
+    }
+
+    .status-message.error {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+
+    .status-message.pending {
+      background: #fef3c7;
+      color: #d97706;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid #ffffff;
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 1s linear infinite;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .secure-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      margin-top: 20px;
+      color: #6b7280;
+      font-size: 12px;
+    }
+
+    .secure-badge::before {
+      content: '🔒';
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="checkout-container" data-test-id="checkout-container">
+    <div class="checkout-header">
+      <h1>Payment Gateway</h1>
+      <div class="amount" data-test-id="payment-amount">₹0.00</div>
+      <div class="order-id" data-test-id="order-id">Loading...</div>
+    </div>
+
+    <div class="checkout-body">
+      <div class="method-tabs" data-test-id="payment-methods">
+        <div class="method-tab active" data-method="upi" data-test-id="method-upi">
+          <div class="icon">📱</div>
+          <div class="label">UPI</div>
+        </div>
+        <div class="method-tab" data-method="card" data-test-id="method-card">
+          <div class="icon">💳</div>
+          <div class="label">Card</div>
+        </div>
+      </div>
+
+      <form id="payment-form" data-test-id="payment-form">
+        <!-- UPI Form -->
+        <div id="upi-form" data-test-id="upi-form">
+          <div class="form-group">
+            <label for="vpa">UPI ID / VPA</label>
+            <input 
+              type="text" 
+              id="vpa" 
+              name="vpa"
+              placeholder="yourname@paytm" 
+              data-test-id="vpa-input"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- Card Form -->
+        <div id="card-form" class="hidden" data-test-id="card-form">
+          <div class="form-group">
+            <label for="card_number">Card Number</label>
+            <input 
+              type="text" 
+              id="card_number" 
+              name="card_number"
+              placeholder="4111 1111 1111 1111" 
+              data-test-id="card-number-input"
+              maxlength="19"
+            />
+          </div>
+          <div class="card-row">
+            <div class="form-group">
+              <label for="card_expiry">Expiry</label>
+              <input 
+                type="text" 
+                id="card_expiry" 
+                name="card_expiry"
+                placeholder="MM/YY" 
+                data-test-id="card-expiry-input"
+                maxlength="5"
+              />
+            </div>
+            <div class="form-group">
+              <label for="card_cvv">CVV</label>
+              <input 
+                type="password" 
+                id="card_cvv" 
+                name="card_cvv"
+                placeholder="123" 
+                data-test-id="card-cvv-input"
+                maxlength="4"
+              />
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="pay-button" data-test-id="pay-button">
+          Pay Now
+        </button>
+      </form>
+
+      <div id="status-message" class="status-message hidden" data-test-id="status-message"></div>
+
+      <div class="secure-badge">
+        Secured by Payment Gateway
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'http://localhost:8000';
+    
+    // Parse URL parameters
+    const params = new URLSearchParams(window.location.search);
+    const orderId = params.get('order_id');
+    const apiKey = params.get('key') || 'key_test_abc123';
+    const embedded = params.get('embedded') === 'true';
+    
+    let selectedMethod = 'upi';
+    let orderData = null;
+    let paymentId = null;
+    let pollingInterval = null;
+
+    // DOM elements
+    const amountEl = document.querySelector('[data-test-id="payment-amount"]');
+    const orderIdEl = document.querySelector('[data-test-id="order-id"]');
+    const form = document.getElementById('payment-form');
+    const payButton = document.querySelector('[data-test-id="pay-button"]');
+    const statusEl = document.getElementById('status-message');
+    const upiForm = document.getElementById('upi-form');
+    const cardForm = document.getElementById('card-form');
+    const methodTabs = document.querySelectorAll('.method-tab');
+
+    // Initialize
+    async function init() {
+      if (!orderId) {
+        showStatus('error', 'Order ID is required');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_URL}/api/v1/orders/${orderId}`, {
+          headers: {
+            'X-Api-Key': apiKey,
+            'X-Api-Secret': 'secret_test_xyz789'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Order not found');
+        }
+
+        orderData = await response.json();
+        amountEl.textContent = `₹${(orderData.amount / 100).toFixed(2)}`;
+        orderIdEl.textContent = `Order: ${orderData.id}`;
+      } catch (error) {
+        showStatus('error', 'Failed to load order details');
+      }
+    }
+
+    // Method tab switching
+    methodTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const method = tab.dataset.method;
+        selectedMethod = method;
+
+        methodTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        if (method === 'upi') {
+          upiForm.classList.remove('hidden');
+          cardForm.classList.add('hidden');
+        } else {
+          upiForm.classList.add('hidden');
+          cardForm.classList.remove('hidden');
+        }
+      });
+    });
+
+    // Form submission
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      payButton.disabled = true;
+      payButton.innerHTML = '<span class="loading-spinner"></span> Processing...';
+      hideStatus();
+
+      try {
+        const paymentData = {
+          order_id: orderId,
+          method: selectedMethod
+        };
+
+        if (selectedMethod === 'upi') {
+          paymentData.vpa = document.getElementById('vpa').value;
+        } else {
+          paymentData.card_number = document.getElementById('card_number').value.replace(/\s/g, '');
+          paymentData.card_expiry = document.getElementById('card_expiry').value;
+          paymentData.card_cvv = document.getElementById('card_cvv').value;
+        }
+
+        const response = await fetch(`${API_URL}/api/v1/payments`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Api-Key': apiKey,
+            'X-Api-Secret': 'secret_test_xyz789'
+          },
+          body: JSON.stringify(paymentData)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          throw new Error(result.error?.description || 'Payment failed');
+        }
+
+        paymentId = result.id;
+        showStatus('pending', 'Payment is being processed...');
+        
+        // Start polling for payment status
+        pollPaymentStatus();
+      } catch (error) {
+        showStatus('error', error.message);
+        payButton.disabled = false;
+        payButton.innerHTML = 'Pay Now';
+      }
+    });
+
+    // Poll payment status
+    async function pollPaymentStatus() {
+      let attempts = 0;
+      const maxAttempts = 30;
+
+      pollingInterval = setInterval(async () => {
+        attempts++;
+
+        try {
+          const response = await fetch(`${API_URL}/api/v1/payments/${paymentId}`, {
+            headers: {
+              'X-Api-Key': apiKey,
+              'X-Api-Secret': 'secret_test_xyz789'
+            }
+          });
+
+          const payment = await response.json();
+
+          if (payment.status === 'success') {
+            clearInterval(pollingInterval);
+            showStatus('success', 'Payment successful!');
+            payButton.innerHTML = '✓ Paid';
+            
+            if (embedded) {
+              sendMessageToParent('payment_success', {
+                paymentId: payment.id,
+                orderId: payment.order_id,
+                status: payment.status
+              });
+            }
+          } else if (payment.status === 'failed') {
+            clearInterval(pollingInterval);
+            showStatus('error', payment.error_description || 'Payment failed');
+            payButton.disabled = false;
+            payButton.innerHTML = 'Retry Payment';
+            
+            if (embedded) {
+              sendMessageToParent('payment_failed', {
+                paymentId: payment.id,
+                error: payment.error_description
+              });
+            }
+          } else if (attempts >= maxAttempts) {
+            clearInterval(pollingInterval);
+            showStatus('pending', 'Payment is taking longer than expected. Please check back later.');
+            payButton.disabled = false;
+            payButton.innerHTML = 'Check Status';
+          }
+        } catch (error) {
+          console.error('Polling error:', error);
+        }
+      }, 2000);
+    }
+
+    // Send message to parent window
+    function sendMessageToParent(type, data) {
+      if (window.parent !== window) {
+        window.parent.postMessage({ type, data }, '*');
+      }
+    }
+
+    // Show/hide status
+    function showStatus(type, message) {
+      statusEl.className = `status-message ${type}`;
+      statusEl.textContent = message;
+      statusEl.classList.remove('hidden');
+    }
+
+    function hideStatus() {
+      statusEl.classList.add('hidden');
+    }
+
+    // Card number formatting
+    document.getElementById('card_number').addEventListener('input', (e) => {
+      let value = e.target.value.replace(/\D/g, '');
+      value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+      e.target.value = value;
+    });
+
+    // Expiry formatting
+    document.getElementById('card_expiry').addEventListener('input', (e) => {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length >= 2) {
+        value = value.slice(0, 2) + '/' + value.slice(2);
+      }
+      e.target.value = value;
+    });
+
+    // Initialize on load
+    init();
+  </script>
+</body>
+</html>

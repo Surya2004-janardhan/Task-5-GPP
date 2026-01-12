@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Gateway - Checkout</title>
+</head>
+<body>
+  <script>
+    // Redirect to checkout page with order_id if provided
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('order_id')) {
+      window.location.href = '/checkout' + window.location.search;
+    }
+  </script>
+  <h1>Payment Gateway Checkout</h1>
+  <p>Please provide an order_id in the URL to proceed with checkout.</p>
+</body>
+</html>
