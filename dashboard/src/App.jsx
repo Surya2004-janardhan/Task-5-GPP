@@ -6,34 +6,41 @@ import {
   Link,
   useLocation,
 } from "react-router-dom";
-import Dashboard from "./pages/Dashboard";
-import Orders from "./pages/Orders";
-import Payments from "./pages/Payments";
-import Refunds from "./pages/Refunds";
-import Webhooks from "./pages/Webhooks";
-import Docs from "./pages/Docs";
+import Dashboard from "./pages/Dashboard.jsx";
+import Orders from "./pages/Orders.jsx";
+import Payments from "./pages/Payments.jsx";
+import Refunds from "./pages/Refunds.jsx";
+import Webhooks from "./pages/Webhooks.jsx";
+import Docs from "./pages/Docs.jsx";
 
 function Sidebar() {
   const location = useLocation();
 
-  const isActive = (path) => (location.pathname === path ? "active" : "");
+  const isActive = (path) =>
+    location.pathname === path
+      ? "bg-white text-black"
+      : "text-gray-400 hover:bg-gray-800 hover:text-white";
 
   return (
-    <div className="sidebar" data-test-id="sidebar">
-      <div className="sidebar-header">
-        <h1>Payment Gateway</h1>
+    <div className="w-64 bg-black text-white min-h-screen" data-test-id="sidebar">
+      <div className="p-6 border-b border-gray-800">
+        <h1 className="text-xl font-bold">Payment Gateway</h1>
       </div>
-      <nav>
-        <ul className="sidebar-nav">
+      <nav className="mt-6">
+        <ul className="space-y-1">
           <li>
-            <Link to="/" className={isActive("/")} data-test-id="nav-dashboard">
+            <Link
+              to="/"
+              className={`block px-6 py-3 transition-all ${isActive("/")}`}
+              data-test-id="nav-dashboard"
+            >
               Dashboard
             </Link>
           </li>
           <li>
             <Link
               to="/orders"
-              className={isActive("/orders")}
+              className={`block px-6 py-3 transition-all ${isActive("/orders")}`}
               data-test-id="nav-orders"
             >
               Orders
@@ -42,7 +49,7 @@ function Sidebar() {
           <li>
             <Link
               to="/payments"
-              className={isActive("/payments")}
+              className={`block px-6 py-3 transition-all ${isActive("/payments")}`}
               data-test-id="nav-payments"
             >
               Payments
@@ -51,7 +58,7 @@ function Sidebar() {
           <li>
             <Link
               to="/refunds"
-              className={isActive("/refunds")}
+              className={`block px-6 py-3 transition-all ${isActive("/refunds")}`}
               data-test-id="nav-refunds"
             >
               Refunds
@@ -60,7 +67,7 @@ function Sidebar() {
           <li>
             <Link
               to="/dashboard/webhooks"
-              className={isActive("/dashboard/webhooks")}
+              className={`block px-6 py-3 transition-all ${isActive("/dashboard/webhooks")}`}
               data-test-id="nav-webhooks"
             >
               Webhooks
@@ -69,7 +76,7 @@ function Sidebar() {
           <li>
             <Link
               to="/dashboard/docs"
-              className={isActive("/dashboard/docs")}
+              className={`block px-6 py-3 transition-all ${isActive("/dashboard/docs")}`}
               data-test-id="nav-docs"
             >
               API Docs
@@ -84,9 +91,9 @@ function Sidebar() {
 function App() {
   return (
     <Router>
-      <div className="dashboard-container">
+      <div className="flex min-h-screen bg-gray-100">
         <Sidebar />
-        <main className="main-content">
+        <main className="flex-1 p-8">
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/orders" element={<Orders />} />

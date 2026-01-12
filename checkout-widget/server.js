@@ -1,6 +1,5 @@
 const express = require("express");
 const path = require("path");
-const fs = require("fs");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -15,23 +14,23 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(express.static(path.join(__dirname, "public")));
-app.use(express.json());
-
 // Serve the SDK JavaScript file
 app.get("/checkout.js", (req, res) => {
   res.setHeader("Content-Type", "application/javascript");
   res.sendFile(path.join(__dirname, "dist", "checkout.js"));
 });
 
-// Serve checkout page
-app.get("/checkout", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "checkout.html"));
-});
+// Serve static files from build directory
+app.use(express.static(path.join(__dirname, "build")));
 
 // Health check
 app.get("/health", (req, res) => {
   res.json({ status: "healthy" });
+});
+
+// Serve React app for all other routes
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
 app.listen(PORT, () => {

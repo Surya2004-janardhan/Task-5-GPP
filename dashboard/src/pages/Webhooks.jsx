@@ -54,9 +54,7 @@ function Webhooks() {
 
   const handleRegenerateSecret = async () => {
     try {
-      const response = await api.post(
-        "/api/v1/merchants/webhook/regenerate-secret"
-      );
+      const response = await api.post("/api/v1/merchants/webhook/regenerate-secret");
       setWebhookSecret(response.data.webhook_secret);
       setMessage({ type: "success", text: "Webhook secret regenerated" });
       setTimeout(() => setMessage(null), 3000);
@@ -72,12 +70,7 @@ function Webhooks() {
       setTimeout(() => setMessage(null), 3000);
       setTimeout(fetchData, 2000);
     } catch (error) {
-      setMessage({
-        type: "error",
-        text:
-          error.response?.data?.error?.description ||
-          "Failed to send test webhook",
-      });
+      setMessage({ type: "error", text: error.response?.data?.error?.description || "Failed to send test webhook" });
     }
   };
 
@@ -93,45 +86,59 @@ function Webhooks() {
   };
 
   if (loading) {
-    return <div className="loading">Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-gray-500">Loading...</div>
+      </div>
+    );
   }
+
+  const getStatusStyle = (status) => {
+    switch (status) {
+      case "success":
+        return "bg-black text-white";
+      case "pending":
+        return "bg-gray-300 text-black";
+      case "failed":
+        return "bg-gray-600 text-white";
+      default:
+        return "bg-gray-100 text-black";
+    }
+  };
 
   return (
     <div data-test-id="webhook-config">
-      <div className="page-header">
-        <h2>Webhook Configuration</h2>
-      </div>
+      <h2 className="text-3xl font-bold text-black mb-8">Webhook Configuration</h2>
 
       {message && (
-        <div
-          className={
-            message.type === "success" ? "success-message" : "error-message"
-          }
-        >
+        <div className={`p-4 rounded-lg mb-6 ${message.type === "success" ? "bg-gray-100 text-black" : "bg-gray-800 text-white"}`}>
           {message.text}
         </div>
       )}
 
-      <div className="card">
+      <div className="bg-white border border-gray-200 rounded-lg p-6 mb-8">
         <form data-test-id="webhook-config-form" onSubmit={handleSaveWebhook}>
-          <div className="form-group">
-            <label>Webhook URL</label>
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">Webhook URL</label>
             <input
               type="url"
               data-test-id="webhook-url-input"
               placeholder="https://yoursite.com/webhook"
               value={webhookUrl}
               onChange={(e) => setWebhookUrl(e.target.value)}
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-black"
             />
           </div>
 
-          <div className="form-group">
-            <label>Webhook Secret</label>
-            <div className="secret-display">
-              <code data-test-id="webhook-secret">{webhookSecret}</code>
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">Webhook Secret</label>
+            <div className="flex items-center gap-4">
+              <code className="flex-1 bg-gray-100 px-4 py-3 rounded-lg font-mono text-sm" data-test-id="webhook-secret">
+                {webhookSecret}
+              </code>
               <button
                 type="button"
-                className="btn btn-secondary btn-sm"
+                className="px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
                 data-test-id="regenerate-secret-button"
                 onClick={handleRegenerateSecret}
               >
@@ -140,17 +147,17 @@ function Webhooks() {
             </div>
           </div>
 
-          <div style={{ display: "flex", gap: "10px" }}>
+          <div className="flex gap-4">
             <button
               type="submit"
-              className="btn btn-primary"
+              className="px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition"
               data-test-id="save-webhook-button"
             >
               Save Configuration
             </button>
             <button
               type="button"
-              className="btn btn-secondary"
+              className="px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
               data-test-id="test-webhook-button"
               onClick={handleTestWebhook}
             >
@@ -160,50 +167,41 @@ function Webhooks() {
         </form>
       </div>
 
-      <div className="card">
-        <h3>Webhook Logs</h3>
+      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+        <div className="p-6 border-b border-gray-200">
+          <h3 className="text-xl font-bold text-black">Webhook Logs</h3>
+        </div>
         {webhookLogs.length === 0 ? (
-          <div className="empty-state">No webhook logs found</div>
+          <div className="text-center py-12 text-gray-500">No webhook logs found</div>
         ) : (
-          <table data-test-id="webhook-logs-table">
-            <thead>
+          <table className="w-full" data-test-id="webhook-logs-table">
+            <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th>Event</th>
-                <th>Status</th>
-                <th>Attempts</th>
-                <th>Last Attempt</th>
-                <th>Response Code</th>
-                <th>Actions</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Event</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Status</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Attempts</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Last Attempt</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Response Code</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-gray-600">Actions</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-gray-100">
               {webhookLogs.map((log) => (
-                <tr
-                  key={log.id}
-                  data-test-id="webhook-log-item"
-                  data-webhook-id={log.id}
-                >
-                  <td data-test-id="webhook-event">{log.event}</td>
-                  <td>
-                    <span
-                      className={`status-badge ${log.status}`}
-                      data-test-id="webhook-status"
-                    >
+                <tr key={log.id} className="hover:bg-gray-50" data-test-id="webhook-log-item" data-webhook-id={log.id}>
+                  <td className="px-6 py-4 text-sm font-mono" data-test-id="webhook-event">{log.event}</td>
+                  <td className="px-6 py-4" data-test-id="webhook-status">
+                    <span className={`inline-block px-3 py-1 text-xs font-medium rounded-full ${getStatusStyle(log.status)}`}>
                       {log.status}
                     </span>
                   </td>
-                  <td data-test-id="webhook-attempts">{log.attempts}</td>
-                  <td data-test-id="webhook-last-attempt">
-                    {log.last_attempt_at
-                      ? new Date(log.last_attempt_at).toLocaleString()
-                      : "-"}
+                  <td className="px-6 py-4 text-sm" data-test-id="webhook-attempts">{log.attempts}</td>
+                  <td className="px-6 py-4 text-sm text-gray-600" data-test-id="webhook-last-attempt">
+                    {log.last_attempt_at ? new Date(log.last_attempt_at).toLocaleString() : "-"}
                   </td>
-                  <td data-test-id="webhook-response-code">
-                    {log.response_code || "-"}
-                  </td>
-                  <td>
+                  <td className="px-6 py-4 text-sm" data-test-id="webhook-response-code">{log.response_code || "-"}</td>
+                  <td className="px-6 py-4">
                     <button
-                      className="btn btn-sm btn-secondary"
+                      className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-50 transition text-sm"
                       data-test-id="retry-webhook-button"
                       data-webhook-id={log.id}
                       onClick={() => handleRetryWebhook(log.id)}
