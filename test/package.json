@@ -5,9 +5,10 @@
   "scripts": {
     "test": "node api-tests.js",
     "test:fast": "node fast-test.js",
+    "test:edge": "node edge-case-tests.js",
     "test:verify": "node verify-requirements.js",
     "test:webhook": "node webhook-receiver.js",
-    "test:all": "node verify-requirements.js && node api-tests.js"
+    "test:all": "node verify-requirements.js && node api-tests.js && node edge-case-tests.js"
   },
   "dependencies": {
     "axios": "^1.6.0",
