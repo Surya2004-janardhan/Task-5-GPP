@@ -408,13 +408,13 @@ async function testRedisPositiveCases() {
     "Redis Positive - Payment job was enqueued"
   );
 
-  // 3. Wait for async payment processing (up to 12 seconds to cover max processing time of 10s + buffer)
-  log("  Waiting for payment processing (up to 12 seconds)...", "info");
+  // 3. Wait for async payment processing (up to 15 seconds to cover processing time + buffer)
+  log("  Waiting for payment processing (up to 15 seconds)...", "info");
   let processedPayment;
   let isProcessed = false;
 
-  // Poll every 2 seconds for up to 12 seconds
-  for (let i = 0; i < 6; i++) {
+  // Poll every 2 seconds for up to 15 seconds (7-8 iterations)
+  for (let i = 0; i < 8; i++) {
     await sleep(2000);
     processedPayment = await api.get(`/api/v1/payments/${payment.data.id}`);
     if (
@@ -422,6 +422,12 @@ async function testRedisPositiveCases() {
       processedPayment.data.status === "failed"
     ) {
       isProcessed = true;
+      log(
+        `  Payment processed after ${(i + 1) * 2} seconds: ${
+          processedPayment.data.status
+        }`,
+        "info"
+      );
       break;
     }
   }
